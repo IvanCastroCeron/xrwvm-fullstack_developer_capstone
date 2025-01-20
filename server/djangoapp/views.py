@@ -75,7 +75,8 @@ def registration(request):
     # If it is a new user
     if not username_exist:
         # Create user in auth_user table
-        user = User.objects.create_user(username=username, first_name=first_name,
+        user = User.objects.create_user(username=username,
+                                        first_name=first_name,
                                         last_name=last_name,
                                         password=password, email=email)
         # Login the user and redirect to list page
@@ -95,7 +96,7 @@ def get_dealerships(request, state="All"):
         endpoint = "/fetchDealers/"+state
     dealerships = get_request(endpoint)
 
-    return JsonResponse({"status" : 200, "dealers" : dealerships})
+    return JsonResponse({"status": 200, "dealers": dealerships})
 
 
 def get_dealer_reviews(request, dealer_id):
@@ -107,33 +108,31 @@ def get_dealer_reviews(request, dealer_id):
             response = analyze_review_sentiments(review_detail['review'])
             print(response)
             review_detail['sentiment'] = response['sentiment']
-        return JsonResponse({"status" : 200, "reviews" : reviews})
+        return JsonResponse({"status": 200, "reviews": reviews})
     else:
-        return JsonResponse({"status" : 400, "message" : "Bad Request"})
+        return JsonResponse({"status": 400, "message": "Bad Request"})
 
 
 def get_dealer_details(request, dealer_id):
     if (dealer_id):
         endpoint = "/fetchDealer/"+str(dealer_id)
         dealership = get_request(endpoint)
-        return JsonResponse({"status" : 200, "dealer" : dealership})
+        return JsonResponse({"status": 200, "dealer": dealership})
     else:
-        return JsonResponse({"status" : 400 ,"message " :"Bad Request"})
+        return JsonResponse({"status": 400 ,"message ": "Bad Request"})
 
 
 def add_review(request):
-    print('Add_Review function!')
     print(request.user.is_anonymous)
     if (request.user.is_anonymous == False):
         data = json.loads(request.body)
-        print("Hello!")
         print(data)
         try:
             response = post_review(data)
             print(response)
-            return JsonResponse({"status" : 200})
-        except:
-            return JsonResponse({"status" : 401, "message" : "Error in posting review"})
+            return JsonResponse({"status": 200})
+        except Exception as err:
+            print(err)
+            return JsonResponse({"status": 401, "message": "Error in posting review"})
     else:
-        print('Else!')
-        return JsonResponse({"status" : 403, "message" : "Unauthorized"})
+        return JsonResponse({"status": 403, "message": "Unauthorized"})
