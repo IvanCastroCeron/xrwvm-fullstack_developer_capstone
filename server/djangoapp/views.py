@@ -119,12 +119,12 @@ def get_dealer_details(request, dealer_id):
         dealership = get_request(endpoint)
         return JsonResponse({"status": 200, "dealer": dealership})
     else:
-        return JsonResponse({"status": 400 ,"message ": "Bad Request"})
+        return JsonResponse({"status": 400, "message ": "Bad Request"})
 
 
 def add_review(request):
     print(request.user.is_anonymous)
-    if (request.user.is_anonymous == False):
+    if (request.user.is_anonymous is False):
         data = json.loads(request.body)
         print(data)
         try:
@@ -133,6 +133,7 @@ def add_review(request):
             return JsonResponse({"status": 200})
         except Exception as err:
             print(err)
-            return JsonResponse({"status": 401, "message": "Error in posting review"})
+            return JsonResponse({"status": 401,
+                                 "message": "Error in posting review"})
     else:
         return JsonResponse({"status": 403, "message": "Unauthorized"})
