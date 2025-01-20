@@ -63,7 +63,6 @@ def registration(request):
         User.objects.get(username=username)
         username_exist = True
     except Exception as err:
-        print(f"Unexpected {err=}, {type(err)=}"):
         # If not, simply log this is a new user
         logger.debug("{} is new user".format(username))
 
@@ -88,7 +87,7 @@ def get_dealerships(request, state="All"):
         endpoint = "/fetchDealers/"+state
     dealerships = get_request(endpoint)
 
-    return JsonResponse({"status": 200,"dealers" : dealerships})
+    return JsonResponse({"status" : 200,"dealers" : dealerships})
 
 def get_dealer_reviews(request, dealer_id):
     # if dealer id has been provided
